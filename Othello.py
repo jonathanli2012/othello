@@ -1,25 +1,18 @@
 from tkinter import *
 
-board = [
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "b", "w", "", "", ""],
-    ["", "", "", "w", "b", "", "", ""],
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", ""],
-    ]
+
 def isInsideBoard(b, lenA):
     row, col = b
     if (row > lenA - 1 or row < 0 or col > lenA - 1 or col < 0):
         return False
     return True
-def printBoard(board):
-    for c in board:
+
+def printBoard(data):
+    for c in data.board:
         print(c, "\n")
-def findFlips(board,row,col,player):
-    lenA = len(board)
+
+def findFlips(data,row,col,player):
+    lenA = len(data.board)
     opponent = "b"
     if (player == "b"):
         opponent= "w"
@@ -29,7 +22,7 @@ def findFlips(board,row,col,player):
 
     for c in positions:
         x,y,z=c
-        if(isInsideBoard((x,y),lenA) and board[x][y] == opponent):
+        if(isInsideBoard((x,y),lenA) and data.board[x][y] == opponent):
             possiblePositions.append(c)
 
     allList = []
@@ -39,9 +32,9 @@ def findFlips(board,row,col,player):
         if(z == 0):
             for n in range(1, lenA):
                 if (isInsideBoard((row - n, col - n), lenA) == True):
-                    if(board[row - n][col - n] == opponent):
+                    if(data.board[row - n][col - n] == opponent):
                         flipList.append((row - n, col - n))
-                    elif(board[row - n][col - n] == ""):
+                    elif(data.board[row - n][col - n] == ""):
                         break
                     else:
                         allList.append(flipList)
@@ -51,9 +44,9 @@ def findFlips(board,row,col,player):
         elif (z == 1):
             for n in range(1, lenA):
                 if (isInsideBoard((row - n, col), lenA) == True):
-                    if (board[row - n][col] == opponent):
+                    if (data.board[row - n][col] == opponent):
                         flipList.append((row - n, col))
-                    elif(board[row - n][col] == ""):
+                    elif(data.board[row - n][col] == ""):
                         break
                     else:
                         allList.append(flipList)
@@ -63,9 +56,9 @@ def findFlips(board,row,col,player):
         elif (z == 2):
             for n in range(1, lenA):
                 if (isInsideBoard((row - n, col + n), lenA) == True):
-                    if(board[row - n][col + n] == opponent):
+                    if(data.board[row - n][col + n] == opponent):
                         flipList.append((row - n, col + n))
-                    elif(board[row - n][col + n] == ""):
+                    elif(data.board[row - n][col + n] == ""):
                         break
                     else:
                         allList.append(flipList)
@@ -75,9 +68,9 @@ def findFlips(board,row,col,player):
         elif (z == 3):
             for n in range(1, lenA):
                 if (isInsideBoard((row, col + n), lenA) == True):
-                    if(board[row][col + n] == opponent):
+                    if(data.board[row][col + n] == opponent):
                         flipList.append((row, col + n))
-                    elif(board[row][col + n] == ""):
+                    elif(data.board[row][col + n] == ""):
                         break
                     else:
                         allList.append(flipList)
@@ -87,9 +80,9 @@ def findFlips(board,row,col,player):
         elif (z == 4):
             for n in range(1, lenA):
                 if (isInsideBoard((row + n, col + n), lenA) == True):
-                    if(board[row + n][col + n] == opponent):
+                    if(data.board[row + n][col + n] == opponent):
                         flipList.append((row + n, col + n))
-                    elif(board[row + n][col + n] == ""):
+                    elif(data.board[row + n][col + n] == ""):
                         break
                     else:
                         allList.append(flipList)
@@ -99,9 +92,9 @@ def findFlips(board,row,col,player):
         elif (z == 5):
             for n in range(1, lenA):
                 if (isInsideBoard((row + n, col), lenA) == True):
-                    if(board[row + n][col] == opponent):
+                    if(data.board[row + n][col] == opponent):
                         flipList.append((row + n, col))
-                    elif(board[row + n][col] == ""):
+                    elif(data.board[row + n][col] == ""):
                         break
                     else:
                         allList.append(flipList)
@@ -111,9 +104,9 @@ def findFlips(board,row,col,player):
         elif (z == 6):
             for n in range(1, lenA):
                 if (isInsideBoard((row + n, col - n), lenA) == True):
-                    if(board[row + n][col - n] == opponent):
+                    if(data.board[row + n][col - n] == opponent):
                         flipList.append((row + n, col - n))
-                    elif(board[row + n][col - n] == ""):
+                    elif(data.board[row + n][col - n] == ""):
                         break
                     else:
                         allList.append(flipList)
@@ -123,9 +116,9 @@ def findFlips(board,row,col,player):
         else:
             for n in range(1, lenA):
                 if (isInsideBoard((row, col - n), lenA) == True):
-                    if(board[row][col - n] == opponent):
+                    if(data.board[row][col - n] == opponent):
                         flipList.append((row, col - n))
-                    elif(board[row][col - n] == ""):
+                    elif(data.board[row][col - n] == ""):
                         break
                     else:
                         allList.append(flipList)
@@ -134,47 +127,52 @@ def findFlips(board,row,col,player):
                     break
 
     return allList
-def makeOthelloMove(board, row, col, player):
-    lenA = len(board)
-    if(isInsideBoard((row,col), lenA) == False or board[row][col] != ""):
+
+def makeOthelloMove(data, row, col, player):
+    lenA = len(data.board)
+    if(isInsideBoard((row,col), lenA) == False or data.board[row][col] != ""):
         return 0
-    flips = findFlips(board,row,col,player)
+    flips = findFlips(data,row,col,player)
     if(len(flips) <= 0):
         return 0
     else:
         piecesFlipped = 0
-        board[row][col] = player
+        data.board[row][col] = player
         for c in flips:
             for d in c:
                 x,y = d
-                board[x][y] = player
+                data.board[x][y] = player
                 piecesFlipped += 1
     return piecesFlipped
-def canPlayerMove(board, player):
-    lenA = len(board)
+
+def canPlayerMove(data, player):
+    lenA = len(data.board)
     for i in range (lenA):
         for j in range(lenA):
-            if(board[i][j] == ""):
-                flipped = findFlips(board,i,j,player)
+            if(data.board[i][j] == ""):
+                flipped = findFlips(data,i,j,player)
                 if(len(flipped) != 0):
                     return True
     return False
-def findWinner(board):
-    lenA = len(board)
+
+def findWinner(data):
+    lenA = len(data.board)
     bCount, wCount = 0, 0
     for i in range (lenA):
-        bCount += board[i].count("b")
-        wCount += board[i].count("w")
+        bCount += data.board[i].count("b")
+        wCount += data.board[i].count("w")
     if(bCount > wCount): return "BLACK WINS"
     elif(bCount < wCount): return "WHITE WINS"
     return "TIE GAME"
-def currentScore(board):
-    lenA = len(board)
+
+def currentScore(data):
+    lenA = len(data.board)
     bCount, wCount = 0, 0
     for i in range (lenA):
-        bCount += board[i].count("b")
-        wCount += board[i].count("w")
+        bCount += data.board[i].count("b")
+        wCount += data.board[i].count("w")
     return (bCount,wCount)
+
 def newGame(data):
     board = [
         ["", "", "", "", "", "", "", ""],
@@ -186,7 +184,7 @@ def newGame(data):
         ["", "", "", "", "", "", "", ""],
         ["", "", "", "", "", "", "", ""],
     ]
-    print(data)
+    #print(data)
     init(data)
 
 def init(data):
@@ -198,10 +196,22 @@ def init(data):
     data.winner = ""
     data.bscore = 2
     data.wscore = 2
+    data.board = [
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "b", "w", "", "", ""],
+    ["", "", "", "w", "b", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ]
+
 def pointInGrid(x, y, data):
     # return True if (x, y) is inside the grid defined by data.
     return ((data.margin <= x <= data.width-data.margin) and
             (data.margin <= y <= data.height-data.margin))
+
 def getCell(x, y, data):
     # aka "viewToModel"
     # return (row, col) in which (x, y) occurred or (-1, -1) if outside grid.
@@ -217,6 +227,7 @@ def getCell(x, y, data):
     row = min(data.rows-1, max(0, row))
     col = min(data.cols-1, max(0, col))
     return (row, col)
+
 def getCellBounds(row, col, data):
     # aka "modelToView"
     # returns (x0, y0, x1, y1) corners/bounding box of given cell in grid
@@ -229,7 +240,11 @@ def getCellBounds(row, col, data):
     y0 = data.margin + row * rowHeight
     y1 = data.margin + (row+1) * rowHeight
     return (x0, y0, x1, y1)
+
 def mousePressed(event, data):
+    if event.x > 795 and event.y > 696:
+        newGame(data)
+
     (row, col) = getCell(event.x, event.y, data)
     # select this (row, col) unless it is selected
     irow = int(row)
@@ -239,23 +254,25 @@ def mousePressed(event, data):
     opponent = "b"
     if(data.player == "b"):
         opponent = "w"
-    result = makeOthelloMove(board, irow, icol, data.player)
+    result = makeOthelloMove(data, irow, icol, data.player)
     if(result != 0):
         data.player = opponent
         data.message = "Othello"
-        data.bscore, data.wscore = currentScore(board)
+        data.bscore, data.wscore = currentScore(data)
     else:
-        if(canPlayerMove(board, data.player) == False):
-            if(canPlayerMove(board, opponent) == False):
+        if(canPlayerMove(data, data.player) == False):
+            if(canPlayerMove(data, opponent) == False):
                 data.message = "Game Over"
-                data.winner = findWinner(board)
+                data.winner = findWinner(data)
             else:
                 data.message = "Opponents Turn"
                 data.player = opponent
         else:
             data.message = "Invalid"
+
 def keyPressed(event, data):
     pass
+
 def redrawAll(canvas, data):
 
     # draw grid of cells
@@ -263,9 +280,9 @@ def redrawAll(canvas, data):
         for col in range(data.cols):
             (x0, y0, x1, y1) = getCellBounds(row, col, data)
             canvas.create_rectangle(x0, y0, x1, y1, fill = "grey")
-            if(board[row][col] == "b"):
+            if(data.board[row][col] == "b"):
                 canvas.create_oval((x0, y0), (x1, y1), fill="black")
-            elif(board[row][col] == "w"):
+            elif(data.board[row][col] == "w"):
                 canvas.create_oval((x0, y0), (x1, y1), fill="white")
 
     canvas.create_text(data.width+data.width/8+50, data.height/8 - 45, text="SCORE:",
@@ -286,9 +303,9 @@ def redrawAll(canvas, data):
                        font="Arial 36 bold", fill="Red")
     canvas.create_text(data.width+150, data.height - 180, text=txt,
                        font="Arial 16 bold", fill="Red")
-    #canvas.create_rectangle(795, 696, 1100, 795, fill = "Silver")
-    #canvas.create_text(data.width+150, data.height - 55, text="New Game",
-                       #font="Arial 24 bold", fill="Red")
+    canvas.create_rectangle(795, 696, 1100, 795, fill = "Silver")
+    canvas.create_text(data.width+150, data.height - 55, text="New Game",
+                       font="Arial 24 bold", fill="Red")
 
 def run(width=300, height=300):
     def redrawAllWrapper(canvas, data):
@@ -329,7 +346,6 @@ def run(width=300, height=300):
 
 run(800, 800)
 
-printBoard(board)
 
 
 
